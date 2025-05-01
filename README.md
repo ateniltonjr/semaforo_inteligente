@@ -25,11 +25,11 @@ Implementação de um sistema de semáforo inteligente com dois modos de operaç
 
 - Modo Noturno: Luz amarela piscante
 
--- Sinalização sonora para cada estado
+- Sinalização sonora para cada estado
 
--- Display OLED com mensagens centralizadas
+- Display OLED com mensagens centralizadas
 
--- Alternância de modos via botão físico
+- Alternância de modos via botão físico
 
 # 🔧 Componentes Utilizados
 - Matriz de LEDs (WS2812B)
