@@ -61,6 +61,7 @@ Clone o repositório:
 
 bash
 git clone https://github.com/ateniltonjr/semaforo_inteligente.git
+
 Abra o projeto no VS Code com PlatformIO
 
 Conecte a placa ao computador
