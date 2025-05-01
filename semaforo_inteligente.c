@@ -1,67 +1,64 @@
 #include "pico/stdlib.h"
 #include "hardware/gpio.h"
-#include "hardware/i2c.h"
-#include "lib/ssd1306.h"
-#include "lib/font.h"
 #include "FreeRTOS.h"
 #include "FreeRTOSConfig.h"
 #include "task.h"
 #include <stdio.h>
+#include "lib/matrixws.h"
+#include "lib/display.h"
+#include "lib/buzzer.h"
 
-#define I2C_PORT i2c1
-#define I2C_SDA 14
-#define I2C_SCL 15
-#define endereco 0x3C
-
-#define led1 11
-#define led2 12
-
-void vBlinkLed1Task()
+void modo_normal()
 {
-    gpio_init(led1);
-    gpio_set_dir(led1, GPIO_OUT);
     while (true)
     {
-        gpio_put(led1, true);
-        vTaskDelay(pdMS_TO_TICKS(250));
-        gpio_put(led1, false);
-        vTaskDelay(pdMS_TO_TICKS(1223));
+        // Sinal verde
+        cores_matriz(22, 0, BRILHO, 0);
+        bf();
+        vTaskDelay(pdMS_TO_TICKS(1000));
+
+        // Sinal amarelo
+        cores_matriz(22, BRILHO, BRILHO, 0);
+        bf();
+        vTaskDelay(pdMS_TO_TICKS(500));
+
+        // Sinal vermelho
+        cores_matriz(22, BRILHO, 0, 0);
+        bf();
+        vTaskDelay(pdMS_TO_TICKS(1000));
     }
 }
 
-void vBlinkLed2Task()
+void modo_noturno()
 {
-    gpio_init(led2);
-    gpio_set_dir(led2, GPIO_OUT);
     while (true)
     {
-        gpio_put(led2, true);
+        cores_matriz(12, BRILHO, BRILHO, 0);
+        bf();
         vTaskDelay(pdMS_TO_TICKS(500));
-        gpio_put(led2, false);
-        vTaskDelay(pdMS_TO_TICKS(2224));
+
+        desliga();
+        vTaskDelay(pdMS_TO_TICKS(500));
+    }
+}
+
+void sinalizacao_sonora()
+{
+    while (true)
+    {
+        buzzer_set_freq(buzzer, 80);
+        vTaskDelay(pdMS_TO_TICKS(300));
+
+        buzzer_stop(buzzer);
+        vTaskDelay(pdMS_TO_TICKS(700));
     }
 }
 
 void vDisplay3Task()
 {
-    // I2C Initialisation. Using it at 400Khz.
-    i2c_init(I2C_PORT, 400 * 1000);
-
-    gpio_set_function(I2C_SDA, GPIO_FUNC_I2C);                    // Set the GPIO pin function to I2C
-    gpio_set_function(I2C_SCL, GPIO_FUNC_I2C);                    // Set the GPIO pin function to I2C
-    gpio_pull_up(I2C_SDA);                                        // Pull up the data line
-    gpio_pull_up(I2C_SCL);                                        // Pull up the clock line
-    ssd1306_t ssd;                                                // Inicializa a estrutura do display
-    ssd1306_init(&ssd, WIDTH, HEIGHT, false, endereco, I2C_PORT); // Inicializa o display
-    ssd1306_config(&ssd);                                         // Configura o display
-    ssd1306_send_data(&ssd);                                      // Envia os dados para o display
-    // Limpa o display. O display inicia com todos os pixels apagados.
-    ssd1306_fill(&ssd, false);
-    ssd1306_send_data(&ssd);
-
     char str_y[5]; // Buffer para armazenar a string
     int contador = 0;
-    bool cor = true;
+    
     while (true)
     {
         sprintf(str_y, "%d", contador); // Converte em string
@@ -90,6 +87,13 @@ void gpio_irq_handler(uint gpio, uint32_t events)
 
 int main()
 {
+    buzzer_init(buzzer, 100);
+    sleep_ms(100);
+    buzzer_stop(buzzer);
+
+    controle(PINO_MATRIZ);
+    display_init();
+
     // Para ser utilizado o modo BOOTSEL com botão B
     gpio_init(botaoB);
     gpio_set_dir(botaoB, GPIO_IN);
@@ -99,11 +103,11 @@ int main()
 
     stdio_init_all();
 
-    xTaskCreate(vBlinkLed1Task, "Blink Task Led1", configMINIMAL_STACK_SIZE,
+    xTaskCreate(modo_normal, "Blink Task Led1", configMINIMAL_STACK_SIZE,
          NULL, tskIDLE_PRIORITY, NULL);
-    xTaskCreate(vBlinkLed2Task, "Blink Task Led2", configMINIMAL_STACK_SIZE, 
+    xTaskCreate(modo_noturno, "Blink Task Led2", configMINIMAL_STACK_SIZE, 
         NULL, tskIDLE_PRIORITY, NULL);
-    xTaskCreate(vDisplay3Task, "Cont Task Disp3", configMINIMAL_STACK_SIZE, 
+    xTaskCreate(sinalizacao_sonora, "Cont Task Disp3", configMINIMAL_STACK_SIZE, 
         NULL, tskIDLE_PRIORITY, NULL);
     vTaskStartScheduler();
     panic_unsupported();

@@ -31,7 +31,9 @@ include_directories(${CMAKE_SOURCE_DIR}/lib)
 
 add_executable(${PROJECT_NAME}  
         semaforo_inteligente.c 
-        lib/ssd1306.c # Biblioteca para o display OLED
+        # Pasta lib
+        lib/ssd1306.c
+        lib/matrixws.c
         )
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR})
@@ -40,6 +42,8 @@ target_link_libraries(${PROJECT_NAME}
         pico_stdlib 
         hardware_gpio
         hardware_i2c
+        hardware_pio
+        hardware_pwm
         FreeRTOS-Kernel 
         FreeRTOS-Kernel-Heap4
         )
