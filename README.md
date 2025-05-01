@@ -56,18 +56,29 @@ Clone o repositório:
 bash
 git clone https://github.com/ateniltonjr/semaforo_inteligente.git
 
-Abra o projeto no VS Code com PlatformIO
+Importe o projeto com a extensão do raspberry pi pico
 
-Conecte a placa ao computador
+No CmakeLists.txt, susbtitua o endereço do FreeRTOSS-Kernel pelo local em que esteja do seu computador.
 
-Compile e envie para a placa:
+Caso não tenha baixado, faça o download do zip e extraia por meio do link:
 
-bash
-pio run -t upload
-Monitor serial (opcional):
+https://github.com/FreeRTOS/FreeRTOS-Kernel.git
 
-bash
-pio device monitor
+Substitua isso:
+
+[set(FREERTOS_KERNEL_PATH "C:/Users/ateni/CODIGOS/TESTES/FreeRTOS-Kernel/")](#)
+
+por isso:
+
+[set(FREERTOS_KERNEL_PATH "C:/caminho/correto/para/FreeRTOS-Kernel")](#)
+
+Apos isso, na extensão do raspberry pi pico, clique na opção [Clean Cmake]() para atualizar a build.
+
+Feito isso:
+
+Conecte a placa ao computador.
+
+Compile e envie para a placa.
 
 
 # 🎥 Demonstração em Vídeo
