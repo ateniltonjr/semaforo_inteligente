@@ -30,4 +30,10 @@ void display_init()
     ssd1306_send_data(&ssd);
 }
 
+// Função para limpar completamente o display
+void limpar_display() {
+    ssd1306_fill(&ssd, false);
+    ssd1306_send_data(&ssd);
+}
+
 #endif

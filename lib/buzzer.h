@@ -1,7 +1,6 @@
 #ifndef BUZZER_H
 #define BUZZER_H
 
-#include "pico/stdlib.h"
 #include "hardware/pwm.h"
 #include "hardware/gpio.h"
 
@@ -10,7 +9,8 @@ volatile bool buzzer_play_A;
 volatile bool buzzer_play_B;
 volatile bool buzzer_play_J;
 
-void buzzer_init(uint gpio, uint freq_hz) {
+void buzzer_init(uint gpio, uint freq_hz) 
+{
     gpio_set_function(gpio, GPIO_FUNC_PWM);
     uint slice = pwm_gpio_to_slice_num(gpio);
 
@@ -25,7 +25,8 @@ void buzzer_init(uint gpio, uint freq_hz) {
     pwm_set_enabled(slice, true);
 }
 
-void buzzer_set_freq(uint gpio, uint freq_hz) {
+void buzzer_set_freq(uint gpio, uint freq_hz) 
+{
     uint slice = pwm_gpio_to_slice_num(gpio);
 
     uint32_t clock_freq = 125000000;
@@ -38,7 +39,8 @@ void buzzer_set_freq(uint gpio, uint freq_hz) {
     pwm_set_chan_level(slice, pwm_gpio_to_channel(gpio), wrap / 2);
 }
 
-void buzzer_stop(uint gpio) {
+void buzzer_stop(uint gpio) 
+{
     uint slice = pwm_gpio_to_slice_num(gpio);
     pwm_set_chan_level(slice, pwm_gpio_to_channel(gpio), 0); // Duty cycle 0%
 }

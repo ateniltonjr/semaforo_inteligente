@@ -4,9 +4,9 @@
 #include "pico/stdlib.h"
 
 // Definição de constantes
-#define PINO_MATRIZ 7  // Pino de controle da matriz de LEDs
-#define NUM_LEDS 25   // Número total de LEDs na matriz
-#define BRILHO 20   // Brilho dos LEDs (30% do máximo)
+#define PINO_MATRIZ 7 // Pino de controle da matriz de LEDs
+#define NUM_LEDS 25  // Número total de LEDs na matriz
+#define BRILHO 20   // Brilho dos LEDs 20/255
 
 // Definição da estrutura de cor para cada LED
 typedef struct {
