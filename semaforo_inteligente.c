@@ -29,7 +29,8 @@ TaskHandle_t task_sonora = NULL;    // Tarefa de sinalização sonora
     3. Vermelho (10 segundos)
  */
 void modo_normal()
-{
+{  
+    leds_rgb(0,0,0); //garante que os leds rgb desliguem antes
     while (true)
     {
         // Sinal verde - LED verde aceso
@@ -80,27 +81,32 @@ void beep_modo_normal()
     while (true)
     {
         // Sinal verde - beep longo
-        buzzer_set_freq(buzzer, 500);
+        buzzer_set_freq(buzzer, 800);
+        leds_rgb(0,1,0);
         vTaskDelay(pdMS_TO_TICKS(1000));
         buzzer_stop(buzzer);
+        leds_rgb(0,0,0);
         vTaskDelay(pdMS_TO_TICKS(9000));
 
         // Sinal amarelo - beeps rápidos
         for(int i = 0; i < 5; i++) 
-        {
-            buzzer_set_freq(buzzer, 200);
+        {   leds_rgb(1,1,0);
+            buzzer_set_freq(buzzer, 500);
             vTaskDelay(pdMS_TO_TICKS(50));
             buzzer_stop(buzzer);
             vTaskDelay(pdMS_TO_TICKS(50));
         }
+        leds_rgb(0,0,0);
         vTaskDelay(pdMS_TO_TICKS(4500));
 
         // Sinal vermelho - beeps médios
         for(int j = 0; j < 5; j++) 
         {
-            buzzer_set_freq(buzzer, 300);
+            buzzer_set_freq(buzzer, 600);
+            leds_rgb(1,0,0);
             vTaskDelay(pdMS_TO_TICKS(500));
             buzzer_stop(buzzer);
+            leds_rgb(0,0,0);
             vTaskDelay(pdMS_TO_TICKS(1500));
         }
     }
@@ -146,7 +152,7 @@ void sinalizacao_sonora()
 {
     while (true) 
     {
-        buzzer_set_freq(buzzer, 80);
+        buzzer_set_freq(buzzer, 1000);
         vTaskDelay(pdMS_TO_TICKS(100));
         buzzer_stop(buzzer);
         vTaskDelay(pdMS_TO_TICKS(1900));
